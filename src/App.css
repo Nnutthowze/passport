@@ -1,0 +1,10 @@
+* {
+  margin: 5px;
+}
+
+.app div {
+  border: 2px solid red;
+  width: 400px;
+  height: 100px;
+}
+
