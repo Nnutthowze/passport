@@ -1,11 +1,16 @@
 var mongoose = require('mongoose');
-var passportLocalMongoose = require('passport-local-mongoose');
-mongoose.Promise = global.Promise;
-var UserSchema = new mongoose.Schema({
-    username: String,
-    password: String
-});
 
-UserSchema.plugin(passportLocalMongoose);
+mongoose.Promise = global.Promise;
+
+var TextSchema = new mongoose.Schema({
+    text: String,
+    author: {
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        },
+        username: String
+    }
+});
 
 module.exports =  mongoose.model('Text', TextSchema);

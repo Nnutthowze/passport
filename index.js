@@ -1,10 +1,11 @@
-const express = require('express');
-const app = express();
-const passport = require('passport');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const LocalStrategy = require('passport-local');
-const User = require('./server/user');
+var express = require('express');
+var app = express();
+var passport = require('passport');
+var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var LocalStrategy = require('passport-local');
+var User = require('./server/user');
+var Text = require('./server/text');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(__dirname + "/public"));
@@ -63,8 +64,26 @@ app.post('/login', (req, res, next) => {
     })(req, res, next);
 });
 
-app.post('/text/new', isLoggedIn, (req, res) => {
-    const text = req.body.text;
+app.post('/text/new', isLoggedIn, function(req, res){
+    var text = req.body.text;
+    var author = {
+        id: req.user._id,
+        username: req.user.username
+    };
+    var newText = {text: text, author: author };
+    Text.create(newText, function(err, newlycreatedText){
+        if(err){ console.log(err); }
+        console.log('we made it');
+        console.log(newlycreatedText);
+        res.send('you prob stored the text');
+    });
+});
+
+app.get('/text', isLoggedIn, function(req, res){
+    Text.find({}, function(err, allText){
+        if(err){ console.log(err); }
+        res.send({ data: allText });
+    });
 });
 
 app.listen(4000);
