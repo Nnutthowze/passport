@@ -98,6 +98,9 @@ class App extends Component {
                   <button onClick={this.showTextOnRequest}>button 1: show text on simple get request</button>
                   <button onClick={this.showTextFromDb}>button 3: show text from db</button>
               </div>
+              <div>
+                <a href="http://localhost:4000/auth/facebook">Login with Facebook</a>
+              </div>
           </div>
         );
     }
