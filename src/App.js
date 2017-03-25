@@ -11,7 +11,8 @@ class App extends Component {
                 username: '',
                 password: ''
             },
-            text: ''
+            text: '',
+            textFromServer: []
         };
     }
 
@@ -35,7 +36,7 @@ class App extends Component {
             data: this.state.user
         }).then(function(res){
             console.log(res);
-        });
+        }).catch(err => console.error(err));
     };
     login = () => {
         axios({
@@ -44,7 +45,7 @@ class App extends Component {
             data: this.state.user
         }).then(function(res){
             console.log(res);
-        });
+        }).catch(err => console.error(err));
     };
     handleInputChangeText = (e) => {
         this.setState({ text: e.target.value });
@@ -53,20 +54,32 @@ class App extends Component {
         axios({
             method: 'post',
             url: '/text/new',
-            data: this.state.text
+            data: { text: this.state.text }
         }).then(function(res){
             console.log(res);
-        });
+        }).catch(err => console.error(err));
     };
     showTextFromDb = () => {
-        this.setState({ get: 'hello, this is text from button 3'});
+        let that = this;
+        axios.get('/text').then(function(res){
+            console.log('res');
+            console.log(res);
+            that.setState({ textFromServer: res.data.data });
+        }).catch(err => console.error(err));
     };
 
     render() {
+        console.log(this.state.textFromServer);
+        var list = this.state.textFromServer.map(function(v, i){
+            return <li key={i}>{v.text}</li>
+        });
         return (
           <div className="app">
               <div>
                   <p>{this.state.get}</p>
+                  <ul>
+                      {list}
+                  </ul>
               </div>
               <div>
                   <button onClick={this.signUp}>sign up</button>

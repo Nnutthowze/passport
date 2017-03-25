@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var LocalStrategy = require('passport-local');
 var User = require('./server/user');
+var Text = require('./server/text');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(__dirname + "/public"));
@@ -65,10 +66,25 @@ app.post("/login", function(req, res, next) {
 
 app.post('/text/new', isLoggedIn, function(req, res){
     var text = req.body.text;
-
+    var author = {
+        id: req.user._id,
+        username: req.user.username
+    };
+    var newText = {text: text, author: author };
+    Text.create(newText, function(err, newlycreatedText){
+        if(err){ console.log(err); }
+        console.log('we made it');
+        console.log(newlycreatedText);
+        res.send('you prob stored the text');
+    });
 });
 
-
+app.get('/text', isLoggedIn, function(req, res){
+    Text.find({}, function(err, allText){
+        if(err){ console.log(err); }
+        res.send({ data: allText });
+    });
+});
 
 app.listen(4000);
 
