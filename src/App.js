@@ -3,8 +3,8 @@ import './App.css';
 import axios from 'axios';
 
 class App extends Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
             get: 'initial this.state',
             user: {
@@ -16,11 +16,12 @@ class App extends Component {
     }
 
     showTextOnRequest = () => {
-        let that = this;
-        axios.get('/text1').then(function(res){
-            that.setState({ get: res.data.text });
+        axios.get('/text1').then(res => {
+            console.log(res.data.text);
+            this.setState({ get: res.data.text });
         });
     };
+
     handleInputChange = (e) => {
         const name = e.target.name;
         const user = this.state.user;
@@ -28,6 +29,7 @@ class App extends Component {
         this.setState({ user });
         console.log(this.state.user);
     };
+    
     signUp = () => {
         axios({
             method: 'post',
